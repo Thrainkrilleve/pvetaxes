@@ -90,21 +90,26 @@
 {{ block.super }}
 <script>
 $(document).ready(function() {
-    // Check if tables have data before initializing DataTables
-    var activityTable = $('#activity-table tbody tr');
-    $('#activity-table').DataTable({
-        "order": [[0, "desc"]],
-        "pageLength": 25,
-        "language": {
-            "emptyTable": "No activity recorded yet"
-        }
-    });
+    // Only initialize DataTables if table has rows
+    if ($('#activity-table tbody tr').length > 0) {
+        $('#activity-table').DataTable({
+            "order": [[0, "desc"]],
+            "pageLength": 25,
+            "language": {
+                "emptyTable": "No activity recorded yet"
+            }
+        });
+    }
     
-    $('#credits-table').DataTable({
-        "order": [[0, "desc"]],
-        "pageLength": 25,
-        "language": {
-            "emptyTable": "No credits or adjustments"
-        }
-    });ipt>
+    if ($('#credits-table tbody tr').length > 0) {
+        $('#credits-table').DataTable({
+            "order": [[0, "desc"]],
+            "pageLength": 25,
+            "language": {
+                "emptyTable": "No credits or adjustments"
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
