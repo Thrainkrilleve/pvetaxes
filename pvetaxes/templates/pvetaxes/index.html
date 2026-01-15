@@ -12,8 +12,11 @@
         <p>Track your PVE earnings from bounties, ESS, missions, and incursions. View your tax obligations and payment history.</p>
         {% if has_characters %}
             <a href="{% url 'pvetaxes:user_summary' %}" class="btn btn-primary">{% translate "View My Summary" %}</a>
+            <a href="{% url 'pvetaxes:launcher' %}" class="btn btn-secondary">{% translate "Manage Characters" %}</a>
         {% else %}
-            <a href="{% url 'pvetaxes:launcher' %}" class="btn btn-primary">{% translate "Add Your First Character" %}</a>
+            <a href="{% url 'pvetaxes:add_character' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> {% translate "Add Your First Character" %}
+            </a>
         {% endif %}
     </div>
 </div>

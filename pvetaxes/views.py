@@ -1,7 +1,12 @@
 from django.contrib.auth.decorators import login_required, permission_required
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.db import models
+from django.contrib import messages
+from esi.decorators import token_required
+
+from allianceauth.eveonline.models import EveCharacter
+from allianceauth.authentication.models import CharacterOwnership
 
 from .decorators import main_character_required
 from .models import Character, Stats, Settings
@@ -170,3 +175,63 @@ def api_update_character(request, character_id):
     update_character_wallet.delay(character_id)
     
     return JsonResponse({"status": "Update started"})
+
+
+@login_required
+@permission_required("pvetaxes.basic_access", raise_exception=True)
+@token_required(scopes=["esi-wallet.read_character_wallet.v1"])
+def add_character(request, token):
+    """Add a character to PVE Taxes tracking."""
+    try:
+        # Get the character from the token
+        eve_character = EveCharacter.objects.get(
+            character_id=token.character_id
+        )
+        
+        # Check if character already exists
+        if Character.objects.filter(eve_character=eve_character).exists():
+            messages.warning(
+                request,
+                f"Character {eve_character.character_name} is already registered."
+            )
+        else:
+            # Create new character
+            character = Character.objects.create(eve_character=eve_character)
+            messages.success(
+                request,
+                f"Successfully added {eve_character.character_name}. "
+                f"Wallet data will be updated shortly."
+            )
+            # Trigger initial wallet update
+            update_character_wallet.delay(character.pk)
+        
+        return redirect("pvetaxes:launcher")
+    
+    except EveCharacter.DoesNotExist:
+        messages.error(
+            request,
+            "Character not found. Please add the character to Alliance Auth first."
+        )
+        return redirect("pvetaxes:launcher")
+    except Exception as e:
+        messages.error(request, f"Error adding character: {str(e)}")
+        return redirect("pvetaxes:launcher")
+
+
+@login_required
+@permission_required("pvetaxes.basic_access", raise_exception=True)
+def remove_character(request, character_id):
+    """Remove a character from PVE Taxes tracking."""
+    character = get_object_or_404(Character, pk=character_id)
+    
+    # Check ownership
+    if not character.user_is_owner(request.user):
+        messages.error(request, "You don't have permission to remove this character.")
+        return redirect("pvetaxes:launcher")
+    
+    character_name = character.eve_character.character_name
+    character.delete()
+    
+    messages.success(request, f"Successfully removed {character_name}.")
+    return redirect("pvetaxes:launcher")
+

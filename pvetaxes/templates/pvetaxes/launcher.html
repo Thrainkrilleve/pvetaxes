@@ -8,6 +8,11 @@
 <div class="card card-default">
     <div class="card-header">
         <h5 class="card-title">{% translate 'My Characters' %}</h5>
+        <div class="card-header-actions">
+            <a href="{% url 'pvetaxes:add_character' %}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> {% translate "Add Character" %}
+            </a>
+        </div>
     </div>
     <div class="card-body">
         {% if characters %}
@@ -31,11 +36,19 @@
                         <td>{{ character.life_credits|floatformat:0|intcomma }} ISK</td>
                         <td>{{ character.life_taxes|add:character.life_credits|floatformat:0|intcomma }} ISK</td>
                         <td>
+                            <button class="btn btn-primary btn-sm update-btn" data-character-id="{{ character.id }}" title="{% translate 'Update Now' %}">
+                                <i class="fas fa-sync"></i>
+                            </button>
                             <a href="{% url 'pvetaxes:user_ledger' character.id %}" class="btn btn-success btn-sm" title="{% translate 'View Ledger' %}">
                                 <i class="fas fa-list"></i>
                             </a>
                             <a href="{% url 'pvetaxes:character_viewer' character.id %}" class="btn btn-info btn-sm" title="{% translate 'Details' %}">
                                 <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{% url 'pvetaxes:remove_character' character.id %}" class="btn btn-danger btn-sm" 
+                               onclick="return confirm('{% translate 'Are you sure you want to remove this character?' %}');" 
+                               title="{% translate 'Remove Character' %}">
+                                <i class="fas fa-trash"></i>
                             </a>
                         </td>
                     </tr>
@@ -43,8 +56,10 @@
                 </tbody>
             </table>
         {% else %}
-            <p>{% translate "You haven't added any characters yet." %}</p>
-            <p>{% translate "To add a character, you'll need to authenticate via ESI and grant wallet reading permissions." %}</p>
+            <div class="alert alert-info">
+                <p>{% translate "You haven't added any characters yet." %}</p>
+                <p>{% translate "Click 'Add Character' above to authenticate via ESI and grant wallet reading permissions." %}</p>
+            </div>
         {% endif %}
     </div>
 </div>
@@ -57,6 +72,32 @@
 $(document).ready(function() {
     $('#characters-table').DataTable({
         "order": [[0, "asc"]]
+    });
+    
+    // Handle update button clicks
+    $('.update-btn').click(function() {
+        var btn = $(this);
+        var characterId = btn.data('character-id');
+        var icon = btn.find('i');
+        
+        // Disable button and show loading
+        btn.prop('disabled', true);
+        icon.addClass('fa-spin');
+        
+        $.ajax({
+            url: '{% url "pvetaxes:api_update_character" 0 %}'.replace('0', characterId),
+            method: 'GET',
+            success: function(data) {
+                alert('Update started! Please wait a moment and refresh the page.');
+                btn.prop('disabled', false);
+                icon.removeClass('fa-spin');
+            },
+            error: function() {
+                alert('Failed to start update. Please try again.');
+                btn.prop('disabled', false);
+                icon.removeClass('fa-spin');
+            }
+        });
     });
 });
 </script>

@@ -13,4 +13,7 @@ urlpatterns = [
     path("user_ledger/<int:character_id>/", views.user_ledger, name="user_ledger"),
     path("character_viewer/<int:character_id>/", views.character_viewer, name="character_viewer"),
     path("faq/", views.faq, name="faq"),
+    path("add_character/", views.add_character, name="add_character"),
+    path("remove_character/<int:character_id>/", views.remove_character, name="remove_character"),
+    path("api/update_character/<int:character_id>/", views.api_update_character, name="api_update_character"),
 ]
