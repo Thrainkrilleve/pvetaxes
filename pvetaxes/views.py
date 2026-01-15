@@ -112,26 +112,32 @@ def user_summary(request):
 @permission_required("pvetaxes.basic_access", raise_exception=True)
 def user_ledger(request, character_id):
     """Detailed ledger for a character."""
-    character = get_object_or_404(Character, pk=character_id)
+    try:
+        character = get_object_or_404(Character, pk=character_id)
+        
+        # Check permissions
+        if not character.user_is_owner(request.user):
+            if not request.user.has_perm("pvetaxes.auditor_access"):
+                return render(request, "pvetaxes/error.html", {
+                    "error_title": "Access Denied",
+                    "error_message": "You don't have permission to view this character."
+                })
+        
+        # Get journal entries with proper error handling
+        journal_entries = character.wallet_journal.select_related('eve_solar_system').order_by('-date')[:100]
+        credits = character.tax_credits.select_related('created_by').order_by('-created_at')[:50]
+        
+        context = {
+            "character": character,
+            "journal_entries": journal_entries,
+            "credits": credits,
+        }
+        
+        return render(request, "pvetaxes/user_ledger.html", context)
     
-    # Check permissions
-    if not character.user_is_owner(request.user):
-        if not request.user.has_perm("pvetaxes.auditor_access"):
-            return render(request, "pvetaxes/error.html", {
-                "error_title": "Access Denied",
-                "error_message": "You don't have permission to view this character."
-            })
-    
-    journal_entries = character.wallet_journal.all()[:100]  # Limit to recent 100
-    credits = character.tax_credits.all()[:50]
-    
-    context = {
-        "character": character,
-        "journal_entries": journal_entries,
-        "credits": credits,
-    }
-    
-    return render(request, "pvetaxes/user_ledger.html", context)
+    except Exception as e:
+        messages.error(request, f"Error loading ledger: {str(e)}")
+        return redirect("pvetaxes:launcher")
 
 
 @login_required
