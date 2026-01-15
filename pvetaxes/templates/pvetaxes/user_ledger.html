@@ -50,8 +50,6 @@
                     <td>{{ entry.tax_rate|floatformat:2 }}%</td>
                     <td>{{ entry.tax_amount|floatformat:0 }} ISK</td>
                 </tr>
-            {% empty %}
-                <tr><td colspan="6">No activity recorded yet</td></tr>
             {% endfor %}
             </tbody>
         </table>
@@ -80,8 +78,6 @@
                     <td>{{ credit.amount|floatformat:0 }} ISK</td>
                     <td>{{ credit.reason }}</td>
                 </tr>
-            {% empty %}
-                <tr><td colspan="4">No credits or adjustments</td></tr>
             {% endfor %}
             </tbody>
         </table>
@@ -96,30 +92,19 @@
 $(document).ready(function() {
     // Check if tables have data before initializing DataTables
     var activityTable = $('#activity-table tbody tr');
-    var hasActivityData = activityTable.length > 0 && !activityTable.first().find('td[colspan]').length;
+    $('#activity-table').DataTable({
+        "order": [[0, "desc"]],
+        "pageLength": 25,
+        "language": {
+            "emptyTable": "No activity recorded yet"
+        }
+    });
     
-    if (hasActivityData) {
-        $('#activity-table').DataTable({
-            "order": [[0, "desc"]],
-            "pageLength": 25,
-            "language": {
-                "emptyTable": "No activity recorded yet"
-            }
-        });
-    }
-    
-    var creditsTable = $('#credits-table tbody tr');
-    var hasCreditsData = creditsTable.length > 0 && !creditsTable.first().find('td[colspan]').length;
-    
-    if (hasCreditsData) {
-        $('#credits-table').DataTable({
-            "order": [[0, "desc"]],
-            "pageLength": 25,
-            "language": {
-                "emptyTable": "No credits or adjustments"
-            }
-        });
-    }
-});
-</script>
+    $('#credits-table').DataTable({
+        "order": [[0, "desc"]],
+        "pageLength": 25,
+        "language": {
+            "emptyTable": "No credits or adjustments"
+        }
+    });ipt>
 {% endblock %}
