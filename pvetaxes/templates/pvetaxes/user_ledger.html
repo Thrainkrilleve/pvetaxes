@@ -94,18 +94,32 @@
 {{ block.super }}
 <script>
 $(document).ready(function() {
-    $('#activity-table').DataTable({
-        "order": [[0, "desc"]],
-        "columnDefs": [
-            { "orderable": true, "targets": "_all" }
-        ]
-    });
-    $('#credits-table').DataTable({
-        "order": [[0, "desc"]],
-        "columnDefs": [
-            { "orderable": true, "targets": "_all" }
-        ]
-    });
+    // Check if tables have data before initializing DataTables
+    var activityTable = $('#activity-table tbody tr');
+    var hasActivityData = activityTable.length > 0 && !activityTable.first().find('td[colspan]').length;
+    
+    if (hasActivityData) {
+        $('#activity-table').DataTable({
+            "order": [[0, "desc"]],
+            "pageLength": 25,
+            "language": {
+                "emptyTable": "No activity recorded yet"
+            }
+        });
+    }
+    
+    var creditsTable = $('#credits-table tbody tr');
+    var hasCreditsData = creditsTable.length > 0 && !creditsTable.first().find('td[colspan]').length;
+    
+    if (hasCreditsData) {
+        $('#credits-table').DataTable({
+            "order": [[0, "desc"]],
+            "pageLength": 25,
+            "language": {
+                "emptyTable": "No credits or adjustments"
+            }
+        });
+    }
 });
 </script>
 {% endblock %}
