@@ -1,0 +1,72 @@
+{% extends 'allianceauth/base-bs5.html' %}
+{% load i18n %}
+{% load navactive %}
+{% load pvetaxes_settings %}
+{% analytics as allow_analytics %}
+
+{% block extra_css %}
+    {% include "bundles/datatables-css-bs5.html" %}
+{% endblock %}
+
+{% block page_title %}{% translate "pvetaxes" %}{% endblock %}
+
+{% block header_nav_brand %}
+    {% translate "PVE Taxes" %}
+{% endblock %}
+
+{% block header_nav_collapse_left %}
+    <li class="nav-item">
+        <a class="nav-link {% navactive request 'pvetaxes:index' %}" href="{% url 'pvetaxes:index' %}">
+            {% translate 'Home' %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% navactive request 'pvetaxes:faq' %}" href="{% url 'pvetaxes:faq' %}">
+            {% translate 'FAQ' %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% navactive request 'pvetaxes:launcher' %}" href="{% url 'pvetaxes:launcher' %}">
+            {% translate 'My Characters' %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% navactive request 'pvetaxes:user_summary' %}" href="{% url 'pvetaxes:user_summary' %}">
+            {% translate 'My Summary' %}
+        </a>
+    </li>
+    {% if perms.pvetaxes.auditor_access %}
+    <li class="nav-item">
+        <a class="nav-link {% navactive request 'pvetaxes:admin_tables' %}" href="{% url 'pvetaxes:admin_tables' %}">
+            {% translate 'Audit Reports' %}
+        </a>
+    </li>
+    {% endif %}
+    {% if perms.pvetaxes.admin_access %}
+    <li class="nav-item">
+        <a class="nav-link {% navactive request 'pvetaxes:admin_launcher' %}" href="{% url 'pvetaxes:admin_launcher' %}">
+            {% translate 'Admin Setup' %}
+        </a>
+    </li>
+    {% endif %}
+{% endblock header_nav_collapse_left %}
+
+{% block content %}
+    <div class="pvetaxes">
+        <br/>
+        {% block details %}{% endblock %}
+    </div>
+{% endblock %}
+
+{% block extra_javascript %}
+    {% include "bundles/datatables-js-bs5.html" %}
+    {% if allow_analytics %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LF8WFVQZSS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-LF8WFVQZSS');
+    </script>
+    {% endif %}
+{% endblock %}

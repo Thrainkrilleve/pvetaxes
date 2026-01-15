@@ -1,0 +1,107 @@
+{% extends 'pvetaxes/base.html' %}
+{% load i18n %}
+{% load humanize %}
+
+{% block details %}
+
+<div class="card card-default">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Current Month Statistics" %}</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>{% translate "Activity Type" %}</th>
+                    <th>{% translate "Total Earned" %}</th>
+                    <th>{% translate "Total Taxes" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{% translate "Bounties" %}</td>
+                    <td>{{ stats.curmonth_bounties|floatformat:0|intcomma }} ISK</td>
+                    <td>{{ stats.curmonth_bounties_tax|floatformat:0|intcomma }} ISK</td>
+                </tr>
+                <tr>
+                    <td>{% translate "ESS" %}</td>
+                    <td>{{ stats.curmonth_ess|floatformat:0|intcomma }} ISK</td>
+                    <td>{{ stats.curmonth_ess_tax|floatformat:0|intcomma }} ISK</td>
+                </tr>
+                <tr>
+                    <td>{% translate "Missions" %}</td>
+                    <td>{{ stats.curmonth_missions|floatformat:0|intcomma }} ISK</td>
+                    <td>{{ stats.curmonth_missions_tax|floatformat:0|intcomma }} ISK</td>
+                </tr>
+                <tr>
+                    <td>{% translate "Incursions" %}</td>
+                    <td>{{ stats.curmonth_incursions|floatformat:0|intcomma }} ISK</td>
+                    <td>{{ stats.curmonth_incursions_tax|floatformat:0|intcomma }} ISK</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card card-default mt-3">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Lifetime Statistics" %}</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>{% translate "Activity Type" %}</th>
+                    <th>{% translate "Total Earned" %}</th>
+                    <th>{% translate "Total Taxes" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{% translate "Bounties" %}</td>
+                    <td>{{ stats.life_bounties|floatformat:0|intcomma }} ISK</td>
+                    <td>{{ stats.life_bounties_tax|floatformat:0|intcomma }} ISK</td>
+                </tr>
+                <tr>
+                    <td>{% translate "ESS" %}</td>
+                    <td>{{ stats.life_ess|floatformat:0|intcomma }} ISK</td>
+                    <td>{{ stats.life_ess_tax|floatformat:0|intcomma }} ISK</td>
+                </tr>
+                <tr>
+                    <td>{% translate "Missions" %}</td>
+                    <td>{{ stats.life_missions|floatformat:0|intcomma }} ISK</td>
+                    <td>{{ stats.life_missions_tax|floatformat:0|intcomma }} ISK</td>
+                </tr>
+                <tr>
+                    <td>{% translate "Incursions" %}</td>
+                    <td>{{ stats.life_incursions|floatformat:0|intcomma }} ISK</td>
+                    <td>{{ stats.life_incursions_tax|floatformat:0|intcomma }} ISK</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card card-default mt-3">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Top Earners This Month" %}</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for activity_type, leaders in stats.curmonth_leadergraph.items %}
+            <div class="col-md-6">
+                <h6>{{ activity_type|title }}</h6>
+                <ol>
+                    {% for leader in leaders %}
+                        <li>{{ leader.name }}: {{ leader.amount|floatformat:0|intcomma }} ISK</li>
+                    {% empty %}
+                        <li class="text-muted">{% translate "No data yet" %}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'pvetaxes/base.html' %}
+{% load i18n %}
+{% load humanize %}
+
+{% block details %}
+
+<div class="card card-default">
+    <div class="card-header">
+        <h5 class="card-title">{{ character.eve_character.character_name }}</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">{% translate "Corporation:" %}</dt>
+            <dd class="col-sm-9">{{ character.eve_character.corporation_name }}</dd>
+            <dt class="col-sm-3">{% translate "Lifetime Taxes:" %}</dt>
+            <dd class="col-sm-9">{{ character.life_taxes|floatformat:0|intcomma }} ISK</dd>
+            <dt class="col-sm-3">{% translate "Lifetime Credits:" %}</dt>
+            <dd class="col-sm-9">{{ character.life_credits|floatformat:0|intcomma }} ISK</dd>
+            <dt class="col-sm-3">{% translate "Current Balance:" %}</dt>
+            <dd class="col-sm-9 {% if character.life_taxes|add:character.life_credits > 0 %}text-danger{% else %}text-success{% endif %}">
+                <strong>{{ character.life_taxes|add:character.life_credits|floatformat:0|intcomma }} ISK</strong>
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card card-default mt-3">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Recent Activity" %}</h5>
+    </div>
+    <div class="card-body">
+        <table id="activity-table" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Activity Type</th>
+                <th>System</th>
+                <th>Amount Earned</th>
+                <th>Tax Rate</th>
+                <th>Tax Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in journal_entries %}
+                <tr>
+                    <td>{{ entry.date|date:"Y-m-d H:i" }}</td>
+                    <td>{{ entry.activity_type|title }}</td>
+                    <td>{{ entry.eve_solar_system.name|default:"Unknown" }}</td>
+                    <td>{{ entry.amount|floatformat:0 }} ISK</td>
+                    <td>{{ entry.tax_rate|floatformat:2 }}%</td>
+                    <td>{{ entry.tax_amount|floatformat:0 }} ISK</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="6">No activity recorded yet</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card card-default mt-3">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Credits & Adjustments" %}</h5>
+    </div>
+    <div class="card-body">
+        <table id="credits-table" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Reason</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for credit in credits %}
+                <tr>
+                    <td>{{ credit.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ credit.get_credit_type_display }}</td>
+                    <td>{{ credit.amount|floatformat:0 }} ISK</td>
+                    <td>{{ credit.reason }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4">No credits or adjustments</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+{{ block.super }}
+<script>
+$(document).ready(function() {
+    $('#activity-table').DataTable({
+        "order": [[0, "desc"]]
+    });
+    $('#credits-table').DataTable({
+        "order": [[0, "desc"]]
+    });
+});
+</script>
+{% endblock %}

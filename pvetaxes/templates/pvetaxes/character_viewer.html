@@ -1,0 +1,62 @@
+{% extends 'pvetaxes/base.html' %}
+{% load i18n %}
+{% load humanize %}
+
+{% block details %}
+
+<div class="card card-default">
+    <div class="card-header">
+        <h5 class="card-title">{{ character.eve_character.character_name }}</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">{% translate "Corporation:" %}</dt>
+            <dd class="col-sm-9">{{ character.eve_character.corporation_name }}</dd>
+            <dt class="col-sm-3">{% translate "Alliance:" %}</dt>
+            <dd class="col-sm-9">{{ character.eve_character.alliance_name|default:"None" }}</dd>
+            <dt class="col-sm-3">{% translate "Added:" %}</dt>
+            <dd class="col-sm-9">{{ character.created_at|date:"Y-m-d" }}</dd>
+            <dt class="col-sm-3">{% translate "Last Update:" %}</dt>
+            <dd class="col-sm-9">{{ character.last_wallet_update|date:"Y-m-d H:i"|default:"Never" }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card card-default mt-3">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Statistics" %}</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h6>{% translate "Lifetime Taxes" %}</h6>
+                        <h4>{{ character.life_taxes|floatformat:0|intcomma }} ISK</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h6>{% translate "Lifetime Credits" %}</h6>
+                        <h4>{{ character.life_credits|floatformat:0|intcomma }} ISK</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card {% if character.life_taxes|add:character.life_credits > 0 %}bg-danger{% else %}bg-success{% endif %} text-white">
+                    <div class="card-body text-center">
+                        <h6>{% translate "Current Balance" %}</h6>
+                        <h4>{{ character.life_taxes|add:character.life_credits|floatformat:0|intcomma }} ISK</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <a href="{% url 'pvetaxes:user_ledger' character.id %}" class="btn btn-primary">{% translate "View Ledger" %}</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

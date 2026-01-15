@@ -1,0 +1,72 @@
+{% extends 'pvetaxes/base.html' %}
+{% load i18n %}
+{% load humanize %}
+
+{% block details %}
+
+<div class="card card-default">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Taxes Summary" %}</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-4">{% translate "Total Taxes Owed:" %}</dt>
+            <dd class="col-sm-8 {% if total_taxes > 0 %}text-danger{% else %}text-success{% endif %}">
+                {{ total_taxes|floatformat:0|intcomma }} ISK
+            </dd>
+            <dt class="col-sm-4">{% translate "Total Credits Applied:" %}</dt>
+            <dd class="col-sm-8">{{ total_credits|floatformat:0|intcomma }} ISK</dd>
+            <dt class="col-sm-4">{% translate "Current Balance:" %}</dt>
+            <dd class="col-sm-8 {% if total_balance > 0 %}text-danger{% else %}text-success{% endif %}">
+                <strong>{{ total_balance|floatformat:0|intcomma }} ISK</strong>
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card card-default mt-3">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Your Characters" %}</h5>
+    </div>
+    <div class="card-body">
+        {% for character in characters %}
+            <div class="mb-4">
+                <h6>{{ character.eve_character.character_name }}</h6>
+                <table class="table table-sm table-bordered">
+                    <tr>
+                        <th>Activity Type</th>
+                        <th>Amount Earned</th>
+                        <th>Taxes Owed</th>
+                    </tr>
+                    {% if character.monthly_activity_json %}
+                        <tr>
+                            <td>Bounties</td>
+                            <td>{{ character.monthly_activity_json.bounty|default:0|floatformat:0 }} ISK</td>
+                            <td>{{ character.monthly_taxes_json.bounty|default:0|floatformat:0 }} ISK</td>
+                        </tr>
+                        <tr>
+                            <td>ESS</td>
+                            <td>{{ character.monthly_activity_json.ess|default:0|floatformat:0 }} ISK</td>
+                            <td>{{ character.monthly_taxes_json.ess|default:0|floatformat:0 }} ISK</td>
+                        </tr>
+                        <tr>
+                            <td>Missions</td>
+                            <td>{{ character.monthly_activity_json.mission|default:0|floatformat:0 }} ISK</td>
+                            <td>{{ character.monthly_taxes_json.mission|default:0|floatformat:0 }} ISK</td>
+                        </tr>
+                        <tr>
+                            <td>Incursions</td>
+                            <td>{{ character.monthly_activity_json.incursion|default:0|floatformat:0 }} ISK</td>
+                            <td>{{ character.monthly_taxes_json.incursion|default:0|floatformat:0 }} ISK</td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="3">No activity data available</td></tr>
+                    {% endif %}
+                </table>
+                <a href="{% url 'pvetaxes:user_ledger' character.id %}" class="btn btn-primary btn-sm">{% translate "View Full Ledger" %}</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

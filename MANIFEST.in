@@ -1,0 +1,4 @@
+include README.md
+include LICENSE
+recursive-include pvetaxes/templates *
+recursive-include pvetaxes/static *

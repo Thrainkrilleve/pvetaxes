@@ -1,0 +1,6 @@
+allianceauth>=2.15.0
+django>=3.2
+django-eveuniverse>=1.0.0
+app-utils>=1.0.0
+celery>=5.0.0
+requests>=2.25.0

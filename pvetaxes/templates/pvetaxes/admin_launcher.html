@@ -1,0 +1,70 @@
+{% extends 'pvetaxes/base.html' %}
+{% load i18n %}
+{% load humanize %}
+
+{% block details %}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "PVE Taxes Administration" %}</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">{% translate "Total Characters Tracked:" %}</dt>
+            <dd class="col-sm-9">{{ total_characters }}</dd>
+            <dt class="col-sm-3">{% translate "Admin Characters:" %}</dt>
+            <dd class="col-sm-9">{{ admins.count }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card card-default mt-3">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Admin Characters (Accountants)" %}</h5>
+    </div>
+    <div class="card-body">
+        {% if admins %}
+            <table id="admins-table" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>{% translate "Character" %}</th>
+                        <th>{% translate "Corporation" %}</th>
+                        <th>{% translate "Last Update" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for admin in admins %}
+                    <tr>
+                        <td>{{ admin.eve_character.character_name }}</td>
+                        <td>{{ admin.corporation.corporation_name }}</td>
+                        <td>{{ admin.last_update|date:"Y-m-d H:i"|default:"Never" }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-muted">{% translate "No admin characters configured. Add characters with accountant roles in the Django admin." %}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card card-default mt-3">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Actions" %}</h5>
+    </div>
+    <div class="card-body">
+        <a href="{% url 'pvetaxes:admin_tables' %}" class="btn btn-primary">{% translate "View Statistics" %}</a>
+        <a href="/admin/pvetaxes/" class="btn btn-secondary">{% translate "Django Admin" %}</a>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+{{ block.super }}
+<script>
+$(document).ready(function() {
+    $('#admins-table').DataTable();
+});
+</script>
+{% endblock %}

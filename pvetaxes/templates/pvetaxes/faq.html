@@ -1,0 +1,118 @@
+{% extends 'pvetaxes/base.html' %}
+{% load i18n %}
+
+{% block details %}
+
+<div class="card card-default">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Frequently Asked Questions" %}</h5>
+    </div>
+    <div class="card-body">
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                        {% translate "What activities are tracked?" %}
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>{% translate "PVE Taxes tracks the following activities:" %}</p>
+                        <ul>
+                            <li><strong>{% translate "Bounties/Ratting:" %}</strong> {% translate "ISK earned from killing NPCs" %}</li>
+                            <li><strong>{% translate "ESS Payouts:" %}</strong> {% translate "Payments from Encounter Surveillance Systems" %}</li>
+                            <li><strong>{% translate "Missions:" %}</strong> {% translate "Mission rewards and time bonuses" %}</li>
+                            <li><strong>{% translate "Incursions:" %}</strong> {% translate "Incursion payout rewards" %}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                        {% translate "How are taxes calculated?" %}
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>{% translate "Taxes are calculated based on the security status of the system where the activity occurred. Your corp may have different tax rates for high-sec, low-sec, null-sec, wormhole space, and Pochven." %}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                        {% translate "How do I pay my taxes?" %}
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>{% translate "Send ISK to your corporation's master wallet. Make sure to include the payment phrase (set by your corp) in the description so the payment is automatically credited to your account." %}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                        {% translate "Can I add multiple characters?" %}
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>{% translate "Yes! You can add all your characters. Your total tax balance will be the sum of all your characters' taxes minus any credits applied." %}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFive">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                        {% translate "What is a tax credit?" %}
+                    </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>{% translate "Tax credits can be applied by administrators to offset your tax balance. This might be used for special circumstances, rewards, or adjustments." %}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingSix">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix">
+                        {% translate "Is there interest on unpaid taxes?" %}
+                    </button>
+                </h2>
+                <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>{% translate "Your corporation may have configured a monthly interest rate that applies to outstanding balances. Check with your leadership for details." %}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingSeven">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven">
+                        {% translate "Why isn't my recent activity showing up?" %}
+                    </button>
+                </h2>
+                <div id="collapseSeven" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>{% translate "Activity data is updated periodically (usually every few hours). If you just completed an activity, it may take some time to appear." %}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingEight">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight">
+                        {% translate "What permissions do I need to give?" %}
+                    </button>
+                </h2>
+                <div id="collapseEight" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>{% translate "When adding a character, you'll need to grant the" %} <code>esi-wallet.read_character_wallet.v1</code> {% translate "ESI scope so the app can read your wallet journal." %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'pvetaxes/base.html' %}
+{% load i18n %}
+{% load humanize %}
+
+{% block details %}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Welcome to PVE Taxes" %}</h5>
+    </div>
+    <div class="card-body">
+        <p>Track your PVE earnings from bounties, ESS, missions, and incursions. View your tax obligations and payment history.</p>
+        {% if has_characters %}
+            <a href="{% url 'pvetaxes:user_summary' %}" class="btn btn-primary">{% translate "View My Summary" %}</a>
+        {% else %}
+            <a href="{% url 'pvetaxes:launcher' %}" class="btn btn-primary">{% translate "Add Your First Character" %}</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card card-default mt-3">
+    <div class="card-header">
+        <h5 class="card-title">{% translate "Current Month Statistics" %}</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h6>{% translate "Bounties" %}</h6>
+                        <h4>{{ stats.curmonth_bounties|floatformat:0|intcomma }} ISK</h4>
+                        <small>{% translate "Tax:" %} {{ stats.curmonth_bounties_tax|floatformat:0|intcomma }} ISK</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h6>{% translate "ESS Payouts" %}</h6>
+                        <h4>{{ stats.curmonth_ess|floatformat:0|intcomma }} ISK</h4>
+                        <small>{% translate "Tax:" %} {{ stats.curmonth_ess_tax|floatformat:0|intcomma }} ISK</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <h6>{% translate "Missions" %}</h6>
+                        <h4>{{ stats.curmonth_missions|floatformat:0|intcomma }} ISK</h4>
+                        <small>{% translate "Tax:" %} {{ stats.curmonth_missions_tax|floatformat:0|intcomma }} ISK</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body text-center">
+                        <h6>{% translate "Incursions" %}</h6>
+                        <h4>{{ stats.curmonth_incursions|floatformat:0|intcomma }} ISK</h4>
+                        <small>{% translate "Tax:" %} {{ stats.curmonth_incursions_tax|floatformat:0|intcomma }} ISK</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

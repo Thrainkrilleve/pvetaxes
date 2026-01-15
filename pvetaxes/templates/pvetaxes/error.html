@@ -1,0 +1,16 @@
+{% extends 'pvetaxes/base.html' %}
+{% load i18n %}
+
+{% block details %}
+
+<div class="card card-danger">
+    <div class="card-header">
+        <h5 class="card-title">{{ error_title|default:"Error" }}</h5>
+    </div>
+    <div class="card-body">
+        <p>{{ error_message|default:"An error occurred." }}</p>
+        <a href="{% url 'pvetaxes:index' %}" class="btn btn-primary">{% translate "Return to Home" %}</a>
+    </div>
+</div>
+
+{% endblock %}
