@@ -95,10 +95,16 @@
 <script>
 $(document).ready(function() {
     $('#activity-table').DataTable({
-        "order": [[0, "desc"]]
+        "order": [[0, "desc"]],
+        "columnDefs": [
+            { "orderable": true, "targets": "_all" }
+        ]
     });
     $('#credits-table').DataTable({
-        "order": [[0, "desc"]]
+        "order": [[0, "desc"]],
+        "columnDefs": [
+            { "orderable": true, "targets": "_all" }
+        ]
     });
 });
 </script>
